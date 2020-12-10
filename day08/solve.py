@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 """
-Solution for https://adventofcode.com/2020/day/78
+Solution for https://adventofcode.com/2020/day/8
 
 >>> input = parse("day08/test.txt")
 >>> solve1(input)
@@ -11,14 +11,15 @@ Solution for https://adventofcode.com/2020/day/78
 8
 """
 
+
 import sys
 
 
 def parse(fn):
     with open(fn, "r") as f:
         code = []
-        for l in f:
-            q = l.strip().split(" ")
+        for x in f:
+            q = x.strip().split(" ")
             code.append((q[0], int(q[1])))
     return code
 
@@ -54,7 +55,7 @@ def run(code, ip=0, ips=None, acc=0, e_ip=-1, e_code=None):
                     return ret
             ips.add(ip)
             ip += arg
-            
+
     if e_ip == -1:
         return acc
     else:
@@ -66,7 +67,7 @@ def solve1(code):
 
 
 def solve2(code):
-    return run(code, e_ip = None)[0]
+    return run(code, e_ip=None)[0]
 
 
 if __name__ == "__main__":
