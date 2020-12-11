@@ -1,0 +1,204 @@
+; Copyright (c) 2020 Attila Gobi
+; SPDX-License-Identifier: BSD-3-Clause
+; Solution for https://adventofcode.com/2020/day/1
+  push 0
+0:
+  push 1
+  add
+  dup
+  inn
+  dup
+  load
+  js 1
+  jmp 0
+1:
+  discard
+
+; read done, memory map:
+; [0]: temporary storage
+; [1]...[n]: the actual numbers
+; [n+1]: -1
+
+; Call sub 00 with 2020
+  push 2020
+  call 00
+  outn
+  push 10 ; \n
+  outc
+  end
+
+; Subroutine 00:
+; Input: the sum we are looking for
+; Output: the solution or 0 if not found
+00:
+  push 0
+000:
+  ; stack: idx, sum
+  ; save sum to [0]
+  swap
+  dup
+  push 0
+  swap
+  store
+  swap
+
+  ; increment idx and load next number
+  push 1
+  add
+  dup
+  load
+
+  ; check for end of data
+  dup
+  js 0000
+
+  ; load [0] and calculate difference
+  dup
+  push 0
+  load
+  swap
+  sub
+
+  ; stack: difference, current value, idx, sum
+  ; Call 10 with the difference
+  ; Make sure sum is on the stack, [0] will be destroyed
+  call 10
+
+  ; If the return is zero
+  dup
+  jz 001
+
+  ; Found, multiply and return
+  mul
+  jmp 0001
+001:
+  ; restore stack and try the next number
+  discard
+  discard
+  jmp 000
+0000:
+  ; not found
+  discard
+  push 0
+0001:
+  ; clean up stack
+  swap
+  discard
+  swap
+  discard
+  ret
+
+; Subroutine 10:
+; Input: the sum we are looking for
+; Output: the solution or 0 if not found
+10:
+  push 0
+100:
+  ; stack: idx, sum
+  ; save sum to [0]
+  swap
+  dup
+  push 0
+  swap
+  store
+  swap
+
+  ; increment idx and load next number
+  push 1
+  add
+  dup
+  load
+
+  ; check for end of data
+  dup
+  js 1000
+
+  ; load [0] and calculate difference
+  dup
+  push 0
+  load
+  swap
+  sub
+
+  ; stack: difference, current value, idx, sum
+  ; Call 01 with the difference
+  ; Make sure sum is on the stack, [0] will be destroyed
+  call 01
+
+  ; If the return is zero
+  dup
+  jz 101
+
+  ; Found, multiply and return
+  mul
+  jmp 1001
+101:
+  ; restore stack and try the next number
+  discard
+  discard
+  jmp 100
+1000:
+  ; not found
+  discard
+  push 0
+1001:
+  ; clean up stack
+  swap
+  discard
+  swap
+  discard
+  ret
+
+; Subroutine 01
+; Top of the stack: the sum we are looking for
+; Returns: the number if found or 0
+; Pretty similar to 00
+01:
+  push 0
+010: ; loop
+  ; stack: idx, sum
+  ; save sum to [0]
+  swap
+  dup
+  push 0
+  swap
+  store
+  swap
+
+  ; increment idx and load next number
+  push 1
+  add
+  dup
+  load
+
+  ; check for end of data
+  dup
+  js 0100
+
+  ; load [0] and calculate difference
+  dup
+  push 0
+  load
+  swap
+  sub
+
+  ; stack: difference, current number, idx, target
+  ; If difference is zero we have the solution
+  jz 0101
+
+  ; not found try the next number
+  discard
+  jmp 010
+
+0100:
+  ; end of data, return 0
+  discard
+  push 0
+
+0101:
+  ; clean up stack...
+  swap
+  discard
+  swap
+  discard
+  ret
