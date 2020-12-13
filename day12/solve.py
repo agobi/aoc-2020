@@ -11,19 +11,22 @@ Solution for https://adventofcode.com/2020/day/11
 286
 """
 
-import sys, math
-from collections import namedtuple
+import sys
+import math
+
 
 def parse(fn):
     ret = []
     with open(fn, "rt") as f:
-        for l in f:
-            ret.append((l[0], int(l[1:])))
+        for line in f:
+            ret.append((line[0], int(line[1:])))
 
-    return ret  
+    return ret
+
 
 # x: E-W, y: N-S, direction = 0: East
 RAD = math.pi / 180.0
+
 
 class Ship:
     def __init__(self):
@@ -59,8 +62,10 @@ class Ship2:
 
     def rotate(self, units):
         self._wp_x, self._wp_y = (
-            math.cos(RAD * units) * self._wp_x + math.sin(RAD * units) * self._wp_y,
-            -math.sin(RAD * units) * self._wp_x + math.cos(RAD * units) * self._wp_y
+            math.cos(RAD * units) * self._wp_x +
+            math.sin(RAD * units) * self._wp_y,
+            -math.sin(RAD * units) * self._wp_x +
+            math.cos(RAD * units) * self._wp_y
         )
 
     def move(self, direction, units):
@@ -84,7 +89,9 @@ class Ship2:
         return int(abs(self._x) + abs(self._y))
 
     def __str__(self):
-        return "Ship2(%f, %f, %f, %f)" % (self._x, self._y, self._wp_x, self._wp_y)
+        return "Ship2(%f, %f, %f, %f)" % (
+            self._x, self._y, self._wp_x, self._wp_y
+        )
 
 
 def solve(ship, directions):
@@ -92,6 +99,7 @@ def solve(ship, directions):
         ship.move(d, v)
         # print(ship)
     return ship.distance()
+
 
 if __name__ == '__main__':
     data = parse(sys.argv[1])

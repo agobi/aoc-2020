@@ -27,7 +27,11 @@ def parse(fn):
 
 
 def solve1(earliest, buses):
-    bus, wait_time = min(((x, x - earliest % x) for _, x in buses), key=lambda x: x[1])
+    bus, wait_time = min(
+        ((x, x - earliest % x) for _, x in buses),
+        key=lambda x: x[1]
+    )
+
     return bus * wait_time
 
 
